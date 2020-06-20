@@ -29,8 +29,8 @@ alphabet = ['\N{REGIONAL INDICATOR SYMBOL LETTER A}',
         '\N{REGIONAL INDICATOR SYMBOL LETTER Z}']
 
 async def send_poll(ctx, *args):
-    #if (ctx.message.channel.id != POLL_CHANNEL):
-    #    return
+    if (ctx.message.channel.id != POLL_CHANNEL):
+        return
     embed = create_poll(args)
     msg = await ctx.send(embed=embed)
     if (len(args) - 1 == 0):
