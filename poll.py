@@ -1,5 +1,6 @@
 import discord
 from config import POLL_CHANNEL
+from classes import *
 
 alphabet = ['\N{REGIONAL INDICATOR SYMBOL LETTER A}',
         '\N{REGIONAL INDICATOR SYMBOL LETTER B}',
@@ -29,10 +30,11 @@ alphabet = ['\N{REGIONAL INDICATOR SYMBOL LETTER A}',
         '\N{REGIONAL INDICATOR SYMBOL LETTER Z}']
 
 async def send_poll(ctx, *args):
-    if (ctx.message.channel.id != POLL_CHANNEL):
-        return
-    embed = create_poll(args)
+    #if (ctx.message.channel.id != POLL_CHANNEL):
+    #    return
+    poll, embed = create_poll(args)
     msg = await ctx.send(embed=embed)
+    set_poll(msg.id, poll)
     if (len(args) - 1 == 0):
         await msg.add_reaction("\N{Thumbs Up Sign}")
         await msg.add_reaction("\N{Thumbs Down Sign}")
@@ -44,6 +46,10 @@ def create_poll(args):
     embed = discord.Embed(colour=discord.Colour.from_rgb(254, 254, 254))
     title = ""
     description = ""
+    poll = None
+    '''
+    man Poll
+    '''
     if (len(args) == 2 or len(args) == 0):
         title = "man /poll"
         description = """
@@ -52,8 +58,16 @@ def create_poll(args):
         **Sondage avec plusieurs propositions**
         /poll \"Pain au chocolat ou chocolatine ?\" \"Pain au chocolat\" \"Pain au chocolat\" """
     else:
+        poll = Poll(title=args[0])
         title = ":bar_chart: {0}".format(args[0])
-        for i in range (0, len(args) - 1):
-            description += "{0} {1}\n".format(alphabet[i], args[i + 1])
+        #Simple Poll
+        if (len(args) == 1):
+            poll.add_option(Option(emoji="\N{Thumbs Up Sign}"))
+            poll.add_option(Option(emoji="\N{Thumbs Down Sign}"))
+        #Multiple options Poll
+        else:
+            for i in range (0, len(args) - 1):
+                poll.add_option(Option(emoji=alphabet[i], option=args[i + 1]))
+                description += "{0} {1}\n".format(alphabet[i], args[i + 1])
     embed.title, embed.description = title, description
-    return embed
+    return poll, embed
