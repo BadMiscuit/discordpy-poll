@@ -1,4 +1,5 @@
 from db import *
+import discord
 
 class Option:
     def __init__(self, emoji, option=''):
@@ -19,12 +20,27 @@ class Poll:
 
     def add_option(self, option):
         for o in self.options:
-            if option.option == o.option:
+            if (option.option == o.option and option.emoji == o.emoji):
                 return
         self.options.append(option)
 
     def add_reaction(self, reaction):
         self.reactions.append(reaction)
+
+    def to_embed(self):
+        embed = discord.Embed(colour=discord.Colour.from_rgb(254, 254, 254))
+        if (self.title == ''):
+            embed.title = ":bar_chart: Sondage"
+        else:
+            embed.title = self.title
+        if (len(self.options) == 2
+                and self.options[0].option == self.options[1].option
+                and self.options[0].emoji != self.options[1].emoji):
+            return embed
+        embed.description = ""
+        for o in self.options:
+            embed.description += "{0} {1}\n".format(o.emoji, o.option)
+        return embed
 
 class Reaction:
     def __init__(self, option, user):
