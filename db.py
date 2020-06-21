@@ -11,7 +11,8 @@ class DbConnection:
     def __exit__(self, type, value, traceback):
         try:
             self.conn.commit()
-        except:
+        except Exception as e:
+            print(str(e))
             self.conn.rollback()
         self.conn.close()
 
