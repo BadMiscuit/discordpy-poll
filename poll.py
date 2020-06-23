@@ -1,5 +1,5 @@
 import discord
-from config import POLL_CHANNEL, TEST_CHANNEL
+from config import POLL_CHANNEL, TEST_CHANNEL, PEPEBAD
 from classes import *
 
 alphabet = ['\N{REGIONAL INDICATOR SYMBOL LETTER A}',
@@ -33,12 +33,12 @@ async def send_poll(ctx, *args, msg=""):
     if (ctx.message.channel.id != POLL_CHANNEL
             and ctx.message.channel.id != TEST_CHANNEL):
         return
-    if (len(args) == 1):
+    if (len(args) == 0):
         await ctx.send(embed=man_poll())
         return
     try:
         if (len(args) > 27):
-            await ctx.send("Arrête d'essayer de me casser :pepecry:")
+            await ctx.send("Arrête d'essayer de me casser {0}".format(PEPEBAD))
             return
         poll = create_poll(args)
         if (len(poll.options) == 1):
@@ -50,7 +50,7 @@ async def send_poll(ctx, *args, msg=""):
             await msg.add_reaction(option.emoji)
     except Exception as e:
         print(str(e))
-        await ctx.send("Arrête d'essayer de me casser :pepecry:")
+        await ctx.send("Arrête d'essayer de me casser {0}".format(PEPEBAD))
 
 def create_poll(args):
     poll = Poll(title=args[0])
@@ -79,7 +79,7 @@ async def poll_add_option(ctx, *args):
             and ctx.message.channel.id != TEST_CHANNEL):
         return
     # Man
-    if (len(args) > 1 or len(args) == 0):
+    if (len(args) == 0):
         await ctx.send(embed=man_poll_add())
         return
     try:
@@ -87,27 +87,39 @@ async def poll_add_option(ctx, *args):
         if (poll is None):
             await ctx.send("Il n'y a pas de dernier sondage")
             return
-        if (poll.options[0].option == "" and poll.options[1].option == ""):
-            await ctx.send("On peut pas ajouter d'options à un poll simple")
-            return
-        #FIXME
-        if (len(poll.options) == 26):
-            await ctx.send("Arrête d'essayer de me casser :pepecry:")
-        # Option exists
-        for o in poll.options:
-            if (o.option == args[0]):
-                await ctx.send("L'option {0} existe déjà".format(args[0]))
-                return
-
-        emoji = alphabet[len(poll.options)]
-        add_new_option(poll_id, emoji, args[0])
-        poll.add_option(Option(option=args[0], emoji=emoji))
         msg = await ctx.fetch_message(poll_id)
+        if (msg == None):
+            await ctx.send("Je ne trouve pas le dernier sondage")
+            return
+        if (poll.options[0].option == "" and poll.options[1].option == ""):
+            poll.clear_options()
+            remove_options(poll_id)
+            for reaction in msg.reactions:
+                await reaction.clear()
+        #if (msg.channel != ctx.channel):
+        #    await ctx.send("Impossible d'éditer un poll d'un autre channel")
+        #    return
+        options = [x.option for x in poll.options]
+        new_options = [x for x in args if x not in options]
+        #FIXME
+        if (len(poll.options) + len(new_options) > 26):
+            await ctx.send("Arrête d'essayer de me casser {0}".format(PEPEBAD))
+            return
+        # Option exists
+        if (len(new_options) == 0):
+            await ctx.send("Rien à ajouter")
+            return
+        for opt in new_options:
+            emoji = alphabet[len(poll.options)]
+            add_new_option(poll_id, emoji, opt)
+            poll.add_option(Option(option=opt, emoji=emoji))
+            await msg.add_reaction(emoji)
         await msg.edit(embed=poll.to_embed())
-        await msg.add_reaction(emoji)
+        await ctx.message.add_reaction("\N{White Heavy Check Mark}")
     except Exception as e:
         print(str(e))
-        await ctx.send("Arrête d'essayer de me casser :pepecry:")
+        await ctx.message.add_reaction("\N{Cross Mark}")
+        await ctx.send("Arrête d'essayer de me casser {0}".format(PEPEBAD))
 
 def option_exists(poll, option):
     for o in poll.options:
@@ -131,4 +143,4 @@ def man_poll_add():
     return discord.Embed(colour=discord.Colour.from_rgb(254, 254, 254),
         title="man /poll_add",
         description="""**Pour ajouter une option au dernier sondage**
-        /poll_add \"Nouvelle option\" """)
+        /poll_add \"Option 1\" \"Option 2\" \"Option 3\" ... """)

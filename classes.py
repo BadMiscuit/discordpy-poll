@@ -24,6 +24,9 @@ class Poll:
                 return
         self.options.append(option)
 
+    def clear_options(self):
+        self.options = []
+
     def add_reaction(self, reaction):
         self.reactions.append(reaction)
 
@@ -32,7 +35,7 @@ class Poll:
         if (self.title == ''):
             embed.title = ":bar_chart: Sondage"
         else:
-            embed.title = self.title
+            embed.title = ":bar_chart: {0}".format(self.title)
         if (len(self.options) == 2
                 and self.options[0].option == self.options[1].option
                 and self.options[0].emoji != self.options[1].emoji):
@@ -89,3 +92,9 @@ def set_poll(msg, poll):
         #    INSERT INTO polls_reactions VALUE (?, polls_options.rowid, ?)
         #    SELECT rowid FROM polls_options WHERE poll_id = ? AND option = ? AND
         #    emoji = ?''', (msg, r.user, msg, r.option.option, r.option.emoji))
+
+def remove_options(poll_id):
+    with DbConnection() as db:
+        t = (poll_id,)
+        db.execute('DELETE FROM polls_options WHERE poll_id=?', t)
+
