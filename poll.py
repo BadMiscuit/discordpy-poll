@@ -1,5 +1,5 @@
 import discord
-from config import POLL_CHANNEL, TEST_CHANNEL, PEPEBAD
+from config import POLL_CHANNEL, TEST_CHANNEL, PEPECRY
 from classes import *
 
 alphabet = ['\N{REGIONAL INDICATOR SYMBOL LETTER A}',
@@ -38,7 +38,7 @@ async def send_poll(ctx, *args, msg=""):
         return
     try:
         if (len(args) > 27):
-            await ctx.send("Arrête d'essayer de me casser {0}".format(PEPEBAD))
+            await ctx.send("Arrête d'essayer de me casser {0}".format(PEPECRY))
             return
         poll = create_poll(args)
         if (len(poll.options) == 1):
@@ -50,7 +50,8 @@ async def send_poll(ctx, *args, msg=""):
             await msg.add_reaction(option.emoji)
     except Exception as e:
         print(str(e))
-        await ctx.send("Arrête d'essayer de me casser {0}".format(PEPEBAD))
+        await ctx.send("Arrête d'essayer de me casser {0}".format(PEPECRY))
+        print(PEPECRY)
 
 def create_poll(args):
     poll = Poll(title=args[0])
@@ -103,7 +104,7 @@ async def poll_add_option(ctx, *args):
         new_options = [x for x in args if x not in options]
         #FIXME
         if (len(poll.options) + len(new_options) > 26):
-            await ctx.send("Arrête d'essayer de me casser {0}".format(PEPEBAD))
+            await ctx.send("Arrête d'essayer de me casser {0}".format(PEPECRY))
             return
         # Option exists
         if (len(new_options) == 0):
@@ -119,7 +120,7 @@ async def poll_add_option(ctx, *args):
     except Exception as e:
         print(str(e))
         await ctx.message.add_reaction("\N{Cross Mark}")
-        await ctx.send("Arrête d'essayer de me casser {0}".format(PEPEBAD))
+        await ctx.send("Arrête d'essayer de me casser {0}".format(PEPECRY))
 
 def option_exists(poll, option):
     for o in poll.options:
@@ -129,18 +130,18 @@ def option_exists(poll, option):
 
 def man_poll():
     return discord.Embed(colour=discord.Colour.from_rgb(254, 254, 254),
-        title="man /poll",
-        description="""
-        **Sondage simple \N{Thumbs Up Sign}/\N{Thumbs Down Sign}:**
-        /poll \"Suis-je un bon bot ?\"
-        ou
-        /poll \"Vim\" \"Emacs\"\n
-        **Sondage avec plusieurs propositions**
-        /poll \"Pain au chocolat ou chocolatine ?\" \"Pain au chocolat\" \"Pain au chocolat\"
-        """)
+        title="Manuel d'utilisation",
+        description="" \
+        + "**Sondage simple \N{Thumbs Up Sign}/\N{Thumbs Down Sign}:**\n" \
+        + "/poll \"Suis-je un bon bot ?\"\n" \
+        + "ou\n" \
+        + "/poll \"Vim\" \"Emacs\"\n\n" \
+        + "**Sondage avec plusieurs propositions**\n" \
+        + "/poll \"Pain au chocolat ou chocolatine ?\"" \
+        + "\"Pain au chocolat\" \"Pain au chocolat\"")
 
 def man_poll_add():
     return discord.Embed(colour=discord.Colour.from_rgb(254, 254, 254),
-        title="man /poll_add",
+        title="Manuel d'utilisation",
         description="""**Pour ajouter une option au dernier sondage**
         /poll_add \"Option 1\" \"Option 2\" \"Option 3\" ... """)
