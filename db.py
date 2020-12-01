@@ -5,7 +5,7 @@ class DbConnection:
         pass
 
     def __enter__(self):
-        self.conn = sqlite3.connect('bot.db')
+        self.conn = sqlite3.connect('srs-discordbot.db')
         return self.conn.cursor()
 
     def __exit__(self, type, value, traceback):
