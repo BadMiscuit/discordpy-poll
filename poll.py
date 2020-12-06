@@ -1,5 +1,4 @@
 import discord
-<<<<<<< HEAD
 
 from discord.ext import commands
 from utils.util import srs_only, poll_only, logtrace
