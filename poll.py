@@ -65,10 +65,13 @@ class PollCog(commands.Cog):
             await ctx.send(embed=self._help())
         elif (len(args) > 20):
             await ctx.send("Pas plus de 20 options <:{0}:{1}>".format(pepecry[0], pepecry[1]))
-        elif (len(set(args[1:])) == 1):
-            await ctx.send("Crée un sondage avec des options différentes")
+        #elif (len(set(args[1:])) == 1):
+        #    await ctx.send("Crée un sondage avec des options différentes")
         else:
-            self.last_poll = self.create_poll(title=args[0], options=args[1:])
+            if (len(args) == 2):
+                self.last_poll = self.create_poll(title="", options=args)
+            else:
+                self.last_poll = self.create_poll(title=args[0], options=args)
             msg = await ctx.send(content=msg, embed=self.last_poll.to_embed())
             self.last_poll._id = msg.id
             for option in self.last_poll.options:
@@ -78,7 +81,7 @@ class PollCog(commands.Cog):
     def create_poll(self, title="", options=set()):
         poll = Poll(title=title)
         #Simple Poll
-        if (len(options) == 0):
+        if (len(options) == 1):
             poll.add_option(Option(emoji="\N{Thumbs Up Sign}"))
             poll.add_option(Option(emoji="\N{Thumbs Down Sign}"))
         #Simple Poll 2
