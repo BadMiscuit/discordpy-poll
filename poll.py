@@ -1,9 +1,8 @@
 import discord
 
 from discord.ext import commands
-from utils.util import srs_only, poll_only, logtrace
+from utils.util import guild_only, poll_only, logtrace
 from utils.emojis import alphabet, pepeangry, pepecry
-from utils.config import GUILD_ID
 from .classes import Poll, Option
 
 
@@ -23,7 +22,7 @@ class PollCog(commands.Cog):
 
 
     @commands.command(name='poll')
-    @srs_only()
+    @guild_only()
     @poll_only()
     async def poll(self, ctx, *args):
         try:
@@ -34,7 +33,7 @@ class PollCog(commands.Cog):
 
 
     @commands.command(name='poll_all')
-    @srs_only()
+    @guild_only()
     @poll_only()
     async def poll_all(self, ctx, *args):
         try:
@@ -48,7 +47,7 @@ class PollCog(commands.Cog):
 
 
     @commands.command(name='poll_add')
-    @srs_only()
+    @guild_only()
     @poll_only()
     async def poll_add(self, ctx, *args):
         try:
@@ -65,8 +64,6 @@ class PollCog(commands.Cog):
             await ctx.send(embed=self._help())
         elif (len(args) > 20):
             await ctx.send("Pas plus de 20 options <:{0}:{1}>".format(pepecry[0], pepecry[1]))
-        #elif (len(set(args[1:])) == 1):
-        #    await ctx.send("Crée un sondage avec des options différentes")
         else:
             if (len(args) == 2):
                 self.last_poll = self.create_poll(title="", options=args)
