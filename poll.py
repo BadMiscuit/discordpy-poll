@@ -68,7 +68,7 @@ class PollCog(commands.Cog):
             if (len(args) == 2):
                 self.last_poll = self.create_poll(title="", options=args)
             else:
-                self.last_poll = self.create_poll(title=args[0], options=args)
+                self.last_poll = self.create_poll(title=args[0], options=args[1:])
             msg = await ctx.send(content=msg, embed=self.last_poll.to_embed())
             self.last_poll._id = msg.id
             for option in self.last_poll.options:
