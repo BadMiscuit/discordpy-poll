@@ -145,5 +145,5 @@ class PollCog(commands.Cog):
             /poll_add \"Option 1\" \"Option 2\" \"Option 3\" ... """)
 
 
-def setup(bot):
-    bot.add_cog(PollCog(bot))
+async def setup(bot):
+    await bot.add_cog(PollCog(bot))
